@@ -1,0 +1,152 @@
+5-05-12T11:13:03.597+07:00  INFO 232282 --- [AiResume] [           main] o.s.ai.vectorstore.SimpleVectorStore     : Calling EmbeddingModel for document id = 7b135f77-bb5e-41a0-b488-851aaa22ab0e
+resource loading done...............
+2025-05-12T11:14:09.956+07:00  INFO 232282 --- [AiResume] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
+2025-05-12T11:14:09.958+07:00  INFO 232282 --- [AiResume] [           main] o.s.a.r.c.CachingConnectionFactory       : Attempting to connect to: [localhost:5672]
+2025-05-12T11:14:10.011+07:00  INFO 232282 --- [AiResume] [           main] o.s.a.r.c.CachingConnectionFactory       : Created new connection: rabbitConnectionFactory#279126f5:0/SimpleConnection@77e9dca8 [delegate=amqp://guest@127.0.0.1:5672/, localPort=37250]
+2025-05-12T11:14:10.081+07:00  INFO 232282 --- [AiResume] [           main] com.rag.AiResume.AiResumeApplication     : Started AiResumeApplication in 68.296 seconds (process running for 68.546)
+2025-05-12T11:14:16.443+07:00  WARN 232282 --- [AiResume] [ntContainer#0-1] o.s.a.s.c.Jackson2JsonMessageConverter   : Could not convert incoming message with content-type [text/plain], 'json' keyword missing.
+2025-05-12T11:14:16.447+07:00  WARN 232282 --- [AiResume] [ntContainer#0-1] s.a.r.l.ConditionalRejectingErrorHandler : Execution of Rabbit message listener failed.
+
+org.springframework.amqp.rabbit.support.ListenerExecutionFailedException: Listener method could not be invoked with the incoming message
+Endpoint handler details:
+Method [public com.rag.AiResume.model.ChatResponse com.rag.AiResume.controller.RagController.handleRagRequest(com.rag.AiResume.model.QueryRequest)]
+Bean [com.rag.AiResume.controller.RagController@23fd9a72]
+        at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.invokeHandler(MessagingMessageListenerAdapter.java:274) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.invokeHandlerAndProcessResult(MessagingMessageListenerAdapter.java:217) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.onMessage(MessagingMessageListenerAdapter.java:148) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.doInvokeListener(AbstractMessageListenerContainer.java:1682) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.actualInvokeListener(AbstractMessageListenerContainer.java:1604) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.invokeListener(AbstractMessageListenerContainer.java:1592) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.doExecuteListener(AbstractMessageListenerContainer.java:1583) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.executeListenerAndHandleException(AbstractMessageListenerContainer.java:1528) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.lambda$executeListener$8(AbstractMessageListenerContainer.java:1506) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at io.micrometer.observation.Observation.observe(Observation.java:498) ~[micrometer-observation-1.14.3.jar:1.14.3]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.executeListener(AbstractMessageListenerContainer.java:1506) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.doReceiveAndExecute(SimpleMessageListenerContainer.java:1086) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.receiveAndExecute(SimpleMessageListenerContainer.java:1022) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer$AsyncMessageProcessingConsumer.mainLoop(SimpleMessageListenerContainer.java:1425) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer$AsyncMessageProcessingConsumer.run(SimpleMessageListenerContainer.java:1326) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+Caused by: org.springframework.messaging.converter.MessageConversionException: Cannot convert from [[B] to [com.rag.AiResume.model.QueryRequest] for GenericMessage [payload=byte[29], headers={amqp_receivedDeliveryMode=PERSISTENT, amqp_receivedRoutingKey=ragQueue, amqp_contentEncoding=UTF-8, amqp_deliveryTag=1, amqp_consumerQueue=ragQueue, amqp_redelivered=false, amqp_retryCount=0, id=72a1e5d9-46ec-a71c-256e-a718fc240c56, amqp_consumerTag=amq.ctag-SvIRsLpsn4XEBkrKhn9FQw, amqp_lastInBatch=false, contentType=text/plain, timestamp=1747023256445}]
+        at org.springframework.messaging.handler.annotation.support.PayloadMethodArgumentResolver.resolveArgument(PayloadMethodArgumentResolver.java:151) ~[spring-messaging-6.2.2.jar:6.2.2]
+        at org.springframework.amqp.rabbit.listener.adapter.AmqpMessageHandlerMethodFactory$OptionalEmptyAwarePayloadArgumentResolver.resolveArgument(AmqpMessageHandlerMethodFactory.java:99) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.messaging.handler.invocation.HandlerMethodArgumentResolverComposite.resolveArgument(HandlerMethodArgumentResolverComposite.java:118) ~[spring-messaging-6.2.2.jar:6.2.2]
+        at org.springframework.messaging.handler.invocation.InvocableHandlerMethod.getMethodArgumentValues(InvocableHandlerMethod.java:147) ~[spring-messaging-6.2.2.jar:6.2.2]
+        at org.springframework.messaging.handler.invocation.InvocableHandlerMethod.invoke(InvocableHandlerMethod.java:115) ~[spring-messaging-6.2.2.jar:6.2.2]
+        at org.springframework.amqp.rabbit.listener.adapter.HandlerAdapter.invoke(HandlerAdapter.java:75) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.invokeHandler(MessagingMessageListenerAdapter.java:270) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        ... 15 common frames omitted
+
+2025-05-12T11:14:16.461+07:00  WARN 232282 --- [AiResume] [ntContainer#0-1] ingErrorHandler$DefaultExceptionStrategy : Fatal message conversion error; message rejected; it will be dropped or routed to a dead letter exchange, if so configured: (Body:'what is content of this file?' MessageProperties [headers={}, contentType=text/plain, contentEncoding=UTF-8, contentLength=0, receivedDeliveryMode=PERSISTENT, priority=0, redelivered=false, receivedExchange=, receivedRoutingKey=ragQueue, deliveryTag=1, consumerTag=amq.ctag-SvIRsLpsn4XEBkrKhn9FQw, consumerQueue=ragQueue])
+2025-05-12T11:14:16.462+07:00 ERROR 232282 --- [AiResume] [ntContainer#0-1] o.s.a.r.l.SimpleMessageListenerContainer : Execution of Rabbit message listener failed, and the error handler threw an exception
+
+org.springframework.amqp.AmqpRejectAndDontRequeueException: Error Handler converted exception to fatal
+        at org.springframework.amqp.rabbit.listener.ConditionalRejectingErrorHandler.handleError(ConditionalRejectingErrorHandler.java:148) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.invokeErrorHandler(AbstractMessageListenerContainer.java:1475) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.handleListenerException(AbstractMessageListenerContainer.java:1768) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.executeListenerAndHandleException(AbstractMessageListenerContainer.java:1549) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.lambda$executeListener$8(AbstractMessageListenerContainer.java:1506) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at io.micrometer.observation.Observation.observe(Observation.java:498) ~[micrometer-observation-1.14.3.jar:1.14.3]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.executeListener(AbstractMessageListenerContainer.java:1506) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.doReceiveAndExecute(SimpleMessageListenerContainer.java:1086) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.receiveAndExecute(SimpleMessageListenerContainer.java:1022) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer$AsyncMessageProcessingConsumer.mainLoop(SimpleMessageListenerContainer.java:1425) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer$AsyncMessageProcessingConsumer.run(SimpleMessageListenerContainer.java:1326) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+Caused by: org.springframework.amqp.rabbit.support.ListenerExecutionFailedException: Listener method could not be invoked with the incoming message
+Endpoint handler details:
+Method [public com.rag.AiResume.model.ChatResponse com.rag.AiResume.controller.RagController.handleRagRequest(com.rag.AiResume.model.QueryRequest)]
+Bean [com.rag.AiResume.controller.RagController@23fd9a72]
+        at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.invokeHandler(MessagingMessageListenerAdapter.java:274) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.invokeHandlerAndProcessResult(MessagingMessageListenerAdapter.java:217) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.onMessage(MessagingMessageListenerAdapter.java:148) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.doInvokeListener(AbstractMessageListenerContainer.java:1682) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.actualInvokeListener(AbstractMessageListenerContainer.java:1604) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.invokeListener(AbstractMessageListenerContainer.java:1592) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.doExecuteListener(AbstractMessageListenerContainer.java:1583) ~[spring-rabbit-3.2.2.jar:3.2.2]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        -05-12T11:33:05.048+07:00  WARN 253353 --- [AiResume] [ntContainer#0-1] s.a.r.l.ConditionalRejectingErrorHandler : Execution of Rabbit message listener failed.
+
+org.springframework.amqp.rabbit.support.ListenerExecutionFailedException: Listener method could not be invoked with the incoming message
+Endpoint handler details:
+Method [public com.rag.AiResume.model.ChatResponse com.rag.AiResume.controller.RagController.handleRagRequest(com.rag.AiResume.model.QueryRequest)]
+Bean [com.rag.AiResume.controller.RagController@52149ea1]
+        at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.invokeHandler(MessagingMessageListenerAdapter.java:274) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.invokeHandlerAndProcessResult(MessagingMessageListenerAdapter.java:217) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.onMessage(MessagingMessageListenerAdapter.java:148) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.doInvokeListener(AbstractMessageListenerContainer.java:1682) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.actualInvokeListener(AbstractMessageListenerContainer.java:1604) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.invokeListener(AbstractMessageListenerContainer.java:1592) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.doExecuteListener(AbstractMessageListenerContainer.java:1583) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.executeListenerAndHandleException(AbstractMessageListenerContainer.java:1528) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.lambda$executeListener$8(AbstractMessageListenerContainer.java:1506) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at io.micrometer.observation.Observation.observe(Observation.java:498) ~[micrometer-observation-1.14.3.jar:1.14.3]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.executeListener(AbstractMessageListenerContainer.java:1506) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.doReceiveAndExecute(SimpleMessageListenerContainer.java:1086) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.receiveAndExecute(SimpleMessageListenerContainer.java:1022) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer$AsyncMessageProcessingConsumer.mainLoop(SimpleMessageListenerContainer.java:1425) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer$AsyncMessageProcessingConsumer.run(SimpleMessageListenerContainer.java:1326) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+Caused by: org.springframework.messaging.converter.MessageConversionException: Cannot convert from [[B] to [com.rag.AiResume.model.QueryRequest] for GenericMessage [payload=byte[29], headers={amqp_receivedDeliveryMode=PERSISTENT, amqp_receivedRoutingKey=ragQueue, amqp_contentEncoding=UTF-8, amqp_deliveryTag=1, amqp_consumerQueue=ragQueue, amqp_redelivered=false, amqp_retryCount=0, id=9733e6f0-831d-537c-e554-a6aa664b3f67, amqp_consumerTag=amq.ctag-kwCN1b71EBrTGTASti-3Yg, amqp_lastInBatch=false, contentType=text/plain, timestamp=1747024385045}]
+        at org.springframework.messaging.handler.annotation.support.PayloadMethodArgumentResolver.resolveArgument(PayloadMethodArgumentResolver.java:151) ~[spring-messaging-6.2.2.jar:6.2.2]
+        at org.springframework.amqp.rabbit.listener.adapter.AmqpMessageHandlerMethodFactory$OptionalEmptyAwarePayloadArgumentResolver.resolveArgument(AmqpMessageHandlerMethodFactory.java:99) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.messaging.handler.invocation.HandlerMethodArgumentResolverComposite.resolveArgument(HandlerMethodArgumentResolverComposite.java:118) ~[spring-messaging-6.2.2.jar:6.2.2]
+        at org.springframework.messaging.handler.invocation.InvocableHandlerMethod.getMethodArgumentValues(InvocableHandlerMethod.java:147) ~[spring-messaging-6.2.2.jar:6.2.2]
+        at org.springframework.messaging.handler.invocation.InvocableHandlerMethod.invoke(InvocableHandlerMethod.java:115) ~[spring-messaging-6.2.2.jar:6.2.2]
+        at org.springframework.amqp.rabbit.listener.adapter.HandlerAdapter.invoke(HandlerAdapter.java:75) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.invokeHandler(MessagingMessageListenerAdapter.java:270) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        ... 15 common frames omitted
+
+2025-05-12T11:33:05.062+07:00  WARN 253353 --- [AiResume] [ntContainer#0-1] ingErrorHandler$DefaultExceptionStrategy : Fatal message conversion error; message rejected; it will be dropped or routed to a dead letter exchange, if so configured: (Body:'what is content of this file?' MessageProperties [headers={}, contentType=text/plain, contentEncoding=UTF-8, contentLength=0, receivedDeliveryMode=PERSISTENT, priority=0, redelivered=false, receivedExchange=, receivedRoutingKey=ragQueue, deliveryTag=1, consumerTag=amq.ctag-kwCN1b71EBrTGTASti-3Yg, consumerQueue=ragQueue])
+2025-05-12T11:33:05.062+07:00 ERROR 253353 --- [AiResume] [ntContainer#0-1] o.s.a.r.l.SimpleMessageListenerContainer : Execution of Rabbit message listener failed, and the error handler threw an exception
+
+org.springframework.amqp.AmqpRejectAndDontRequeueException: Error Handler converted exception to fatal
+        at org.springframework.amqp.rabbit.listener.ConditionalRejectingErrorHandler.handleError(ConditionalRejectingErrorHandler.java:148) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.invokeErrorHandler(AbstractMessageListenerContainer.java:1475) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.handleListenerException(AbstractMessageListenerContainer.java:1768) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.executeListenerAndHandleException(AbstractMessageListenerContainer.java:1549) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.lambda$executeListener$8(AbstractMessageListenerContainer.java:1506) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at io.micrometer.observation.Observation.observe(Observation.java:498) ~[micrometer-observation-1.14.3.jar:1.14.3]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.executeListener(AbstractMessageListenerContainer.java:1506) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.doReceiveAndExecute(SimpleMessageListenerContainer.java:1086) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.receiveAndExecute(SimpleMessageListenerContainer.java:1022) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer$AsyncMessageProcessingConsumer.mainLoop(SimpleMessageListenerContainer.java:1425) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer$AsyncMessageProcessingConsumer.run(SimpleMessageListenerContainer.java:1326) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+Caused by: org.springframework.amqp.rabbit.support.ListenerExecutionFailedException: Listener method could not be invoked with the incoming message
+Endpoint handler details:
+Method [public com.rag.AiResume.model.ChatResponse com.rag.AiResume.controller.RagController.handleRagRequest(com.rag.AiResume.model.QueryRequest)]
+Bean [com.rag.AiResume.controller.RagController@52149ea1]
+        at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.invokeHandler(MessagingMessageListenerAdapter.java:274) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.invokeHandlerAndProcessResult(MessagingMessageListenerAdapter.java:217) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.onMessage(MessagingMessageListenerAdapter.java:148) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.doInvokeListener(AbstractMessageListenerContainer.java:1682) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.actualInvokeListener(AbstractMessageListenerContainer.java:1604) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.invokeListener(AbstractMessageListenerContainer.java:1592) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.doExecuteListener(AbstractMessageListenerContainer.java:1583) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.executeListenerAndHandleException(AbstractMessageListenerContainer.java:1528) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        ... 8 common frames omitted
+Caused by: org.springframework.messaging.converter.MessageConversionException: Cannot convert from [[B] to [com.rag.AiResume.model.QueryRequest] for GenericMessage [payload=byte[29], headers={amqp_receivedDeliveryMode=PERSISTENT, amqp_receivedRoutingKey=ragQueue, amqp_contentEncoding=UTF-8, amqp_deliveryTag=1, amqp_consumerQueue=ragQueue, amqp_redelivered=false, amqp_retryCount=0, id=9733e6f0-831d-537c-e554-a6aa664b3f67, amqp_consumerTag=amq.ctag-kwCN1b71EBrTGTASti-3Yg, amqp_lastInBatch=false, contentType=text/plain, timestamp=1747024385045}]
+        at org.springframework.messaging.handler.annotation.support.PayloadMethodArgumentResolver.resolveArgument(PayloadMethodArgumentResolver.java:151) ~[spring-messaging-6.2.2.jar:6.2.2]
+        at org.springframework.amqp.rabbit.listener.adapter.AmqpMessageHandlerMethodFactory$OptionalEmptyAwarePayloadArgumentResolver.resolveArgument(AmqpMessageHandlerMethodFactory.java:99) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.messaging.handler.invocation.HandlerMethodArgumentResolverComposite.resolveArgument(HandlerMethodArgumentResolverComposite.java:118) ~[spring-messaging-6.2.2.jar:6.2.2]
+        at org.springframework.messaging.handler.invocation.InvocableHandlerMethod.getMethodArgumentValues(InvocableHandlerMethod.java:147) ~[spring-messaging-6.2.2.jar:6.2.2]
+        at org.springframework.messaging.handler.invocation.InvocableHandlerMethod.invoke(InvocableHandlerMethod.java:115) ~[spring-messaging-6.2.2.jar:6.2.2]
+        at org.springframework.amqp.rabbit.listener.adapter.HandlerAdapter.invoke(HandlerAdapter.java:75) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.invokeHandler(MessagingMessageListenerAdapter.java:270) ~[spring-rabbit-3.2.2.jar:3.2.2]
+        ... 15 common frames omitted
+
