@@ -1,12 +1,8 @@
 package com.rag.AiResume.model;
 
-
-
-
-public class QueryRequest {
-
-  private String query;
-  private String userId;
+public class Query {
+    public String query ;
+    public String userId ;
 
     public String getQuery() {
         return query;
@@ -24,4 +20,5 @@ public class QueryRequest {
         this.userId = userId;
     }
 
+    
 }

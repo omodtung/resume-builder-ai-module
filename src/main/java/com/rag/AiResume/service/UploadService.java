@@ -17,10 +17,14 @@ public class UploadService {
     this.servletContext = servletContext;
   }
 
-  public String handleSaveUpLoadFile(MultipartFile file, String targetFoler) {
+  public String handleSaveUpLoadFile(
+    MultipartFile file,
+    String targetFoler,
+    String userId
+  ) {
     System.err.println("Test 1");
     String rootPath =
-      "/home/dothetung/Projects/Spring-Boot/resumeBuilder/AiResume/src/main/resources/data";
+      "/home/dothetung/Projects/Spring-Boot/resumeBuilder/AiResume/src/main/resources/";
     System.out.println("Root path: " + rootPath); // Log the root path
     String finalName = "";
     try {
@@ -33,7 +37,9 @@ public class UploadService {
         // Handle null filename
         originalFilename = "default-filename.jpg"; // Provide a default name
       }
-      finalName = System.currentTimeMillis() + "-" + originalFilename;
+      //   finalName = System.currentTimeMillis() + "-" + originalFilename;
+      finalName =
+        userId + "_" + System.currentTimeMillis() + "_" + originalFilename;
       File serverFile = new File(
         dir.getAbsolutePath() + File.separator + finalName
       );

@@ -1,12 +1,12 @@
 package com.rag.AiResume.controller;
 
-import com.rag.AiResume.model.ChatResponse;
+import com.rag.AiResume.model.Query;
 import com.rag.AiResume.model.QueryRequest;
-import jakarta.annotation.PostConstruct;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
@@ -21,7 +21,7 @@ import org.springframework.ai.vectorstore.SimpleVectorStore;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,8 +36,10 @@ public class RagController {
 
   private String template;
 
-  @Value("${file.path}")
-  private Resource resource;
+  @Value("${base.document.directory}")
+  private String baseDocumentDirectory;
+
+  // private Resource resource;
 
   public RagController(
     EmbeddingModel embeddingModel,
@@ -47,81 +49,147 @@ public class RagController {
     this.chatClient = chatClientBuilder.build();
   }
 
-  @PostConstruct
-  public void init() {
-    vectorStore = SimpleVectorStore.builder(embeddingModel).build();
+  // @PostConstruct
+  // public void init() {
+  //   vectorStore = SimpleVectorStore.builder(embeddingModel).build();
+  // String text = null;
+  // try (PDDocument document = PDDocument.load(resource.getFile())) {
+  //   PDFTextStripper pdfStripper = new PDFTextStripper();
+  //   text = pdfStripper.getText(document);
+  //   System.out.println(text);
+  // } catch (IOException e) {
+  //   e.printStackTrace();
+  // }
+  // System.out.println("resource loading start...............");
 
-    String text = null;
-    try (PDDocument document = PDDocument.load(resource.getFile())) {
-      PDFTextStripper pdfStripper = new PDFTextStripper();
-      text = pdfStripper.getText(document);
-      System.out.println(text);
+  // Document document = new Document(text);
+  // List<Document> documentList = List.of(document);
+
+  // vectorStore.accept(documentList);
+
+  // // call the funticion loadDocument
+
+  //   System.out.println("resource loading done...............");
+  //   template =
+  //     """
+  // 			Answer the questions only using the information in the provided knowledge base.
+  // 			If you do not know the answer, please response with "I don't know."
+
+  // 			KNOWLEDGE BASE
+  // 			---
+  // 			{documents}
+  // 			""";
+  // }
+
+  public void BuildVectorStore(String userId) {
+    vectorStore = SimpleVectorStore.builder(embeddingModel).build();
+    String userDocument = userId + "_";
+    loadDocumentWithPrefixes(Set.of(userDocument));
+    System.out.println("Resource loading done...............");
+    template =
+      """
+            Answer the questions only using the information in the provided knowledge base.
+            If you do not know the answer, please response with "I don't know."
+
+            KNOWLEDGE BASE
+            ---
+            {documents}
+            """;
+  }
+
+  public void loadDocumentWithPrefixes(Set<String> prefixesToLoad) {
+    List<Document> documentList = new ArrayList<>();
+    try {
+      PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+      Resource[] allPdfResources = resolver.getResources(
+        baseDocumentDirectory + "*.pdf"
+      );
+
+      if (allPdfResources.length == 0) {
+        System.out.println(
+          "No PDF files found in base directory: " + baseDocumentDirectory
+        );
+        return;
+      }
+      for (Resource res : allPdfResources) {
+        String filename = res.getFilename();
+        if (filename == null) continue;
+
+        // Kiểm tra xem tên file có bắt đầu bằng một trong các tiền tố được chỉ định không
+        boolean matchesPrefix = false;
+        for (String prefix : prefixesToLoad) {
+          if (filename.startsWith(prefix)) {
+            matchesPrefix = true;
+            break;
+          }
+        }
+
+        if (matchesPrefix) {
+          System.out.println("Processing file matching prefix: " + filename);
+          String text = null;
+          try (PDDocument document = PDDocument.load(res.getInputStream())) {
+            PDFTextStripper pdfStripper = new PDFTextStripper();
+            text = pdfStripper.getText(document);
+            if (text != null && !text.isBlank()) {
+              documentList.add(
+                new Document(text, Map.of("filename", filename))
+              );
+            } else {
+              System.out.println(
+                "File " + filename + " is empty or could not be read."
+              );
+            }
+          } catch (IOException e) {
+            System.err.println(
+              "Error processing file " + filename + ": " + e.getMessage()
+            );
+            // e.printStackTrace(); // Cân nhắc log chi tiết hơn
+          }
+        }
+
+        if (!documentList.isEmpty()) {
+          vectorStore.add(documentList); // Hoặc vectorStore.accept(documentList);
+          System.out.println(
+            documentList.size() +
+            " documents matching prefixes loaded into vector store."
+          );
+        } else {
+          System.out.println(
+            "No documents matching the specified prefixes were found or loaded."
+          );
+        }
+      }
     } catch (IOException e) {
       e.printStackTrace();
     }
-    System.out.println("resource loading start...............");
-
-    Document document = new Document(text);
-    List<Document> documentList = List.of(document);
-
-    vectorStore.accept(documentList);
-    System.out.println("resource loading done...............");
-    template =
-      """
-				Answer the questions only using the information in the provided knowledge base.
-				If you do not know the answer, please response with "I don't know."
-
-				KNOWLEDGE BASE
-				---
-				{documents}
-				""";
   }
 
-  @PostMapping("/rag")
-  public ChatResponse rag(@RequestBody QueryRequest request) {
-    System.out.println("Received request ..........");
-    request.setConversationId(UUID.randomUUID().toString());
-    // Retrieval
-    String relevantDocs = vectorStore
-      .similaritySearch(request.getQuery())
-      .stream()
-      .map(Document::getText)
-      .collect(Collectors.joining());
-
-    // Augmented
-    Message systemMessage = new SystemPromptTemplate(template)
-      .createMessage(Map.of("documents", relevantDocs));
-
-    // Generation
-    Message userMessage = new UserMessage(request.getQuery());
-    Prompt prompt = new Prompt(List.of(systemMessage, userMessage));
-    ChatClient.CallResponseSpec res = chatClient.prompt(prompt).call();
-
-    ChatResponse chatResponse = new ChatResponse();
-    chatResponse.setResponse(res.content());
-    chatResponse.setResponseId(request.getConversationId().toString());
-    System.out.println("Response send ..........");
-    return chatResponse;
-  }
-
-  // using MessageQueue
   @RabbitListener(queues = "ragQueue")
-  public String handleRagRequest(String request) {
+  public Object handleRagRequest(@RequestBody Query input) {
+    System.err.println(
+      "-userid-" + input.getUserId() + "Query from Server1" + input.getQuery()
+    );
+    BuildVectorStore(input.getUserId());
     String relevantDocs = vectorStore
-      .similaritySearch(request)
+      .similaritySearch(input.getQuery())
       .stream()
       .map(Document::getText)
       .collect(Collectors.joining());
 
     Message systemMessage = new SystemPromptTemplate(template)
       .createMessage(Map.of("documents", relevantDocs));
-    Message userMessage = new UserMessage(request);
+    Message userMessage = new UserMessage(input.getQuery());
     Prompt prompt = new Prompt(List.of(systemMessage, userMessage));
 
     ChatClient.CallResponseSpec res = chatClient.prompt(prompt).call();
     String responseContent = res.content();
 
-    String chatResponse = responseContent;
+    QueryRequest chatResponse = new QueryRequest();
+    chatResponse.setQuery(responseContent);
+    chatResponse.setUserId(input.getUserId());
+    // String chatResponse = responseContent;
+    // System.out.println(" Chat Response " + chatResponse);
+    // return chatResponse;
     return chatResponse;
   }
 }

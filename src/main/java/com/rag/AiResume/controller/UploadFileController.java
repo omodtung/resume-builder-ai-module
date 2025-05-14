@@ -16,7 +16,7 @@ public class UploadFileController {
   @Autowired
   public UploadFileController(UploadService uploadService) {
     this.uploadService = uploadService;
-  }
+  }     
 
   @PostMapping(value = "upload-file")
   public String HandleUploadFile(
@@ -25,6 +25,6 @@ public class UploadFileController {
   ) {
     String target = "data";
     System.out.println("-userId-" + userId);
-    return this.uploadService.handleSaveUpLoadFile(file, target);
+    return this.uploadService.handleSaveUpLoadFile(file, target,userId);
   }
 }
